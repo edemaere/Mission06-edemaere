@@ -12,10 +12,12 @@ namespace Mission06_edemaere.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private MoviesContext moviesContext { get; set; }
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, MoviesContext context)
         {
             _logger = logger;
+            moviesContext = context;
         }
 
         public IActionResult Index()
@@ -37,10 +39,9 @@ namespace Mission06_edemaere.Controllers
         [HttpPost]
         public IActionResult Movies(MovieEntry entry)
         {
-            if (ModelState.IsValid)
-            {
-                return RedirectToAction("Movies");
-            }
+            moviesContext.Add(entry);
+            moviesContext.SaveChanges();
+
             return View("ConfirmationPage", entry);
         }
 

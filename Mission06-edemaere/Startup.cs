@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mission06_edemaere.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mission06_edemaere
 {
@@ -24,6 +26,11 @@ namespace Mission06_edemaere
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddDbContext<MoviesContext>(options =>
+           {
+               options.UseSqlite(Configuration["ConnectionStrings:MoviesConnection"]);
+           });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,6 +8,10 @@ namespace Mission06_edemaere.Models
 {
     public class MovieEntry
     {
+        [Key]
+        [Required]
+        public int EntryId { get; set; }
+
         [Required(AllowEmptyStrings = false)]
         public string Category { get; set; }
 
