@@ -25,7 +25,7 @@ namespace Mission06_edemaere.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Podcasts()
         {
             return View();
         }
