@@ -3,6 +3,9 @@
 }
 @model Mission06_edemaere.Models.MovieEntry
 
+<!--Confirm the submission and give option to add another entry or see all-->
 <h1>Entry Submitted ✓</h1>
 <p>You have successfully submitted the movie "<a style="font-weight:bold;">@Model.Title</a>".</p>
-<a asp-area="" asp-controller="Home" asp-action="Movies">Return to movies</a>
+<a asp-area="" asp-controller="Home" asp-action="MovieEntry">Add another movie</a>
+<br />
+<a asp-area="" asp-controller="Home" asp-action="MovieList">View all movies</a>

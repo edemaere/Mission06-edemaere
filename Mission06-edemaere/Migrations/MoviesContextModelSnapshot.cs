@@ -15,15 +15,70 @@ namespace Mission06_edemaere.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.32");
 
+            modelBuilder.Entity("Mission06_edemaere.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryName = "Action/Adventure"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryName = "Comedy"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryName = "Drama"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            CategoryName = "Family"
+                        },
+                        new
+                        {
+                            CategoryId = 5,
+                            CategoryName = "Horror/Suspense"
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            CategoryName = "Miscellaneous"
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            CategoryName = "Television"
+                        },
+                        new
+                        {
+                            CategoryId = 8,
+                            CategoryName = "VHS"
+                        });
+                });
+
             modelBuilder.Entity("Mission06_edemaere.Models.MovieEntry", b =>
                 {
                     b.Property<int>("EntryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Director")
                         .IsRequired()
@@ -52,13 +107,15 @@ namespace Mission06_edemaere.Migrations
 
                     b.HasKey("EntryId");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Entries");
 
                     b.HasData(
                         new
                         {
                             EntryId = 1,
-                            Category = "Sci-Fi",
+                            CategoryId = 1,
                             Director = "Christopher Nolan",
                             Edited = false,
                             Notes = "It's lit bro",
@@ -69,7 +126,7 @@ namespace Mission06_edemaere.Migrations
                         new
                         {
                             EntryId = 2,
-                            Category = "Sci-Fi",
+                            CategoryId = 1,
                             Director = "Christopher Nolan",
                             Edited = false,
                             Notes = "It's lit too",
@@ -80,7 +137,7 @@ namespace Mission06_edemaere.Migrations
                         new
                         {
                             EntryId = 3,
-                            Category = "Action",
+                            CategoryId = 1,
                             Director = "Christopher Nolan",
                             Edited = false,
                             Notes = "Chris Nolan = Chad",
@@ -88,6 +145,15 @@ namespace Mission06_edemaere.Migrations
                             Title = "The Dark Knight",
                             Year = (short)2008
                         });
+                });
+
+            modelBuilder.Entity("Mission06_edemaere.Models.MovieEntry", b =>
+                {
+                    b.HasOne("Mission06_edemaere.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

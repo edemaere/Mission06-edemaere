@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mission06_edemaere.Models;
 using System;
@@ -11,12 +12,10 @@ namespace Mission06_edemaere.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private MoviesContext moviesContext { get; set; }
 
-        public HomeController(ILogger<HomeController> logger, MoviesContext context)
+        public HomeController(MoviesContext context)
         {
-            _logger = logger;
             moviesContext = context;
         }
 
@@ -31,26 +30,104 @@ namespace Mission06_edemaere.Controllers
         }
 
         [HttpGet]
-        public IActionResult Movies()
+        public IActionResult MovieEntry()
         {
+            //Save categories to viewBag
+            ViewBag.Categories = moviesContext.Categories.ToList();
             return View();
         }
 
         [HttpPost]
-        public IActionResult Movies(MovieEntry entry)
+        public IActionResult MovieEntry(MovieEntry entry)
         {
-            moviesContext.Add(entry);
-            moviesContext.SaveChanges();
+            //if the entry passes validation
+            if (ModelState.IsValid)
+            {
+                //add a new entry
+                moviesContext.Add(entry);
+                moviesContext.SaveChanges();
 
-            return View("ConfirmationPage", entry);
+                //show confirmation page
+                return View("ConfirmationPage", entry);
+            }
+            else //otherwise, return to movie entry view
+            {
+                //Save categories to viewBag
+                ViewBag.Categories = moviesContext.Categories.ToList();
+                return View(entry);
+            }
+
+            
         }
 
-
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet]
+        public IActionResult MovieList()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            //retrieve all  movie entries
+            var movies = moviesContext.Entries
+                .Include(x => x.Category)
+
+                //This could be included to filter database entries by a certain attribute value
+                //.Where(x => x.Edited == false)
+                
+                //order movies by title
+                .OrderBy(x => x.Title)
+                .ToList();
+
+            return View(movies);
+        }
+
+        [HttpGet]
+        public IActionResult Edit (int entryid)
+        {
+            //Save categories to viewBag
+            ViewBag.Categories = moviesContext.Categories.ToList();
+
+            //Find a specific record by the entry id, passed in from view
+            var entry = moviesContext.Entries.Single(x => x.EntryId == entryid);
+
+            return View("MovieEntry", entry);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(MovieEntry entry)
+        {
+            //if the entry passes validation
+            if (ModelState.IsValid)
+            {
+                //update entry
+                moviesContext.Update(entry);
+                moviesContext.SaveChanges();
+
+                //return to movie list
+                return RedirectToAction("MovieList");
+            }
+            else //otherwise, return to movie entry view
+            {
+                //Save categories to viewBag
+                ViewBag.Categories = moviesContext.Categories.ToList();
+                return View("MovieEntry", entry);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int entryid)
+        {
+            //Find a specific record by the entry id, passed in from view
+            var entry = moviesContext.Entries.Single(x => x.EntryId == entryid);
+
+            return View(entry);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(MovieEntry entry)
+        {
+            //delete entry and save changes
+            moviesContext.Entries.Remove(entry);
+            moviesContext.SaveChanges();
+
+            //return to the movie list
+            return RedirectToAction("MovieList");
         }
     }
 }

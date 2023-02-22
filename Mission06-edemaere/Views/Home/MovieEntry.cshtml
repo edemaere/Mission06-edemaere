@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Movies";
+    ViewData["Title"] = "Add/Edit a Movie";
 }
 @model Mission06_edemaere.Models.MovieEntry
 
@@ -7,20 +7,28 @@
 
 <div>
     <form method="post">
-        <label asp-for="Category">Category:</label>
-        <input asp-for="Category" required/><br />
+
+        <!--User Input-->
+        <label asp-for="CategoryId">Category:</label>
+        <select asp-for="CategoryId">
+            <option value="">Select a Category</option>
+            @foreach (Category c in ViewBag.Categories)
+            {
+                <option value="@c.CategoryId">@c.CategoryName</option>
+            }
+        </select><br />
 
         <label asp-for="Title">Title:</label>
-        <input asp-for="Title" required/><br />
+        <input asp-for="Title" /><br />
 
         <label asp-for="Year">Year:</label>
-        <input asp-for="Year" required/><br />
+        <input asp-for="Year" /><br />
 
         <label asp-for="Director">Director:</label>
-        <input asp-for="Director" required/><br />
+        <input asp-for="Director" /><br />
 
+        <!--dropdown with options for rating-->
         <label asp-for="Rating">Rating:</label>
-
         <select asp-for="Rating">
             <option value="G">G</option>
             <option value="PG">PG</option>
@@ -28,6 +36,7 @@
             <option value="R">R</option>
         </select><br />
 
+        <!--dropdown for edited boolean-->
         <label asp-for="Edited">Edited:</label>
         <select asp-for="Edited">
             <option value="false">No</option>
@@ -40,8 +49,9 @@
         <label asp-for="Notes">Notes:</label>
         <input asp-for="Notes" /><br />
 
-        <input id="btnSend" type="submit" value="Submit" />
+        <input id="btnSend" style="background-color:blue" class="btn btn-primary" type="submit" value="Submit" /><br /><br />
 
+        <!--Show validation requirements-->
         <div asp-validation-summary="All"></div>
     </form>
 </div>

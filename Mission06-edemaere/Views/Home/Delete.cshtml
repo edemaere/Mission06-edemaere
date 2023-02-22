@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Delete";
+}
+@model Mission06_edemaere.Models.MovieEntry
+
+<h1>Confirm Deletion</h1>
+<p>Are you sure you want to remove the movie titled"<a style="font-weight:bold;">@Model.Title</a>?".</p>
+
+<form method="post" asp-controller="Home" asp-action="Delete">
+    <button class="btn btn-primary" style="background-color:red" type="submit">Yes</button>
+    <a asp-controller="Home" asp-action="MovieList" style="background-color:blue" class="btn btn-primary">No, take me back</a>
+
+    <input type="hidden" asp-for="EntryId" />
+</form>
